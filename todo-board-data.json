@@ -187,14 +187,14 @@
    "pri": "first",
    "title": "초진방 관리·초대 기능",
    "note": "코드 자동 부여와 함께 확정",
-   "status": "todo",
+   "status": "doing",
    "owner": "",
    "due": "",
    "rep": "",
    "repDay": "",
    "last": "",
    "cyc": "",
-   "u": 0
+   "u": 1791780523735
   },
   {
    "id": "env-desk",
