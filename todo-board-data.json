@@ -270,6 +270,21 @@
    "last": "",
    "cyc": "",
    "u": 1791777558897
+  },
+  {
+   "id": "tmv4q74jehlx9",
+   "area": "ops",
+   "pri": "next",
+   "title": "직원들 시간표",
+   "note": "월급과 시간표 관리",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
+   "u": 1791777729722
   }
  ],
  "deleted": {}
