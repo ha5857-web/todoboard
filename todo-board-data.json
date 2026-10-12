@@ -37,14 +37,14 @@
    "pri": "next",
    "title": "성장달력·챗봇 이용 연결",
    "note": "초진방 등록 후 자동 부여된 코드로 사용",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
    "rep": "",
    "repDay": "",
    "last": "",
    "cyc": "",
-   "u": 0
+   "u": 1791797748282
   },
   {
    "id": "app-code",
