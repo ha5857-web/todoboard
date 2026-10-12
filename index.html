@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F2F4F5">
+<title>삼성자라다 할 일 보드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 좁은 한 단 구성. 구역 제목 아래에 작업 행이 쌓이고, 행은 상태 링 + 제목/메모/태그. 오른쪽 아래 + 버튼으로 추가. */
+:root {
+  --bg: #F2F4F5;
+  --surface: #FFFFFF;
+  --ink: #15202B;
+  --muted: #5E6B76;
+  --line: #D9E0E5;
+  --accent: #1E56C9;
+  --accent-ink: #FFFFFF;
+  --warn: #B3362B;
+  --ok: #17673A;
+  --tag-first-bg: #E3ECFC; --tag-first-fg: #1946A8;
+  --tag-quick-bg: #DDF3E6; --tag-quick-fg: #17673A;
+  --tag-next-bg: #FBEBCB;  --tag-next-fg: #85530A;
+  --tag-par-bg: #E6EAEE;   --tag-par-fg: #44515C;
+  --tag-rec-bg: #EBE4F8;   --tag-rec-fg: #5B3BA3;
+  --font: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0F161C; --surface: #17212A; --ink: #E7EDF2; --muted: #98A6B2; --line: #2A3844;
+    --accent: #6E9BFF; --accent-ink: #0F161C; --warn: #FF8F83; --ok: #8FD6AB;
+    --tag-first-bg: #1B2C52; --tag-first-fg: #A9C3FF;
+    --tag-quick-bg: #173A27; --tag-quick-fg: #8FD6AB;
+    --tag-next-bg: #46340F;  --tag-next-fg: #F0C877;
+    --tag-par-bg: #26323C;   --tag-par-fg: #B3BFC9;
+    --tag-rec-bg: #31264F;   --tag-rec-fg: #CBB9F5;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: calc(24px + env(safe-area-inset-top, 0px)) calc(96px + env(safe-area-inset-bottom, 0px)); }
+header { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+.topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+h1 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -.01em; text-wrap: balance; }
+.syncpill { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.syncpill i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); display: block; }
+.syncpill[data-k="ok"] i { background: var(--ok); }
+.syncpill[data-k="busy"] i { background: var(--accent); }
+.syncpill[data-k="error"] i { background: var(--warn); }
+.syncpill[data-k="error"] { color: var(--warn); }
+.progress { display: flex; flex-direction: column; gap: 8px; }
+.bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; display: flex; }
+.bar i { display: block; height: 100%; }
+.bar .d { background: var(--accent); }
+.bar .p { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.counts { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.counts b { color: var(--ink); font-weight: 600; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-bottom: 8px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 2px; gap: 2px; }
+.seg button { font: inherit; font-size: 13px; padding: 7px 12px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+section { margin-top: 26px; }
+section h2 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+section h2 span { font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 500; }
+.hint { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+li { display: flex; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); align-items: flex-start; }
+li:first-child { border-top: 0; }
+.st { flex: none; width: 30px; height: 30px; margin-top: -1px; border-radius: 50%; background: transparent; border: 0; padding: 2px; cursor: pointer; display: grid; place-items: center; }
+.st span { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--muted); display: grid; place-items: center; color: var(--accent-ink); }
+.st[data-s="doing"] span { border-color: var(--accent); background: linear-gradient(90deg, var(--accent) 50%, transparent 50%); }
+.st[data-s="done"] span { border-color: var(--accent); background: var(--accent); }
+.st svg { width: 13px; height: 13px; display: none; }
+.st[data-s="done"] svg { display: block; }
+.open { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; text-align: left; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; }
+.title { font-weight: 600; text-wrap: balance; overflow-wrap: anywhere; }
+.note { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; white-space: pre-wrap; }
+li[data-s="done"] .title { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
+.tag { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
+.tag.first { background: var(--tag-first-bg); color: var(--tag-first-fg); }
+.tag.quick { background: var(--tag-quick-bg); color: var(--tag-quick-fg); }
+.tag.next { background: var(--tag-next-bg); color: var(--tag-next-fg); }
+.tag.par { background: var(--tag-par-bg); color: var(--tag-par-fg); }
+.tag.rec { background: var(--tag-rec-bg); color: var(--tag-rec-fg); }
+.tag.plain { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tag.late { color: var(--warn); border-color: var(--warn); }
+.empty { padding: 18px 14px; color: var(--muted); font-size: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.fab { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.fab svg { width: 24px; height: 24px; }
+dialog { border: 0; border-radius: 14px; padding: 0; background: var(--surface); color: var(--ink); width: min(480px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; font-family: var(--font); }
+dialog::backdrop { background: rgba(10, 16, 22, .55); }
+.sheet { display: flex; flex-direction: column; gap: 14px; padding: 18px 16px 16px; }
+.sheet h3 { margin: 0; font-size: 17px; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field label { font-size: 12px; color: var(--muted); font-weight: 600; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field input, .field select, .field textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0; }
+.field textarea { min-height: 96px; resize: vertical; }
+.field input.bad { border-color: var(--warn); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btns .sp { flex: 1; }
+.btn { font: inherit; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.addtop { margin-left: auto; }
+.btn.danger { color: var(--warn); border-color: var(--warn); }
+.btn.danger.armed { background: var(--warn); color: var(--surface); }
+.help { font-size: 12.5px; color: var(--muted); margin: 0; }
+.help b { color: var(--ink); }
+.msg { font-size: 13px; margin: 0; min-height: 1.2em; }
+.msg.err { color: var(--warn); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 2px 0; width: 100%; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <div class="eyebrow" id="today">삼성자라다 소아청소년과</div>
+      <button type="button" class="syncpill" id="syncPill" data-k="off" aria-label="동기화 설정 열기"><i></i><span id="syncText">이 기기에만 저장</span></button>
+    </div>
+    <h1>삼성자라다 할 일 보드</h1>
+    <div class="progress" aria-live="polite">
+      <div class="bar"><i class="d" id="barD"></i><i class="p" id="barP"></i></div>
+      <div class="counts" id="counts"></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="묶는 기준">
+      <button type="button" id="gArea" aria-pressed="true">영역별</button>
+      <button type="button" id="gPri" aria-pressed="false">우선순위별</button>
+    </div>
+    <div class="seg" role="group" aria-label="보기">
+      <button type="button" id="fAll" aria-pressed="true">전체</button>
+      <button type="button" id="fOpen" aria-pressed="false">남은 일만</button>
+    </div>
+    <button type="button" class="btn primary addtop" id="addTop">+ 할 일 추가</button>
+  </div>
+
+  <main id="board"></main>
+</div>
+
+<button type="button" class="fab" id="addBtn" aria-label="할 일 추가">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<dialog id="editDlg">
+  <form class="sheet" id="editForm" autocomplete="off">
+    <h3 id="editHead">할 일 편집</h3>
+    <div class="field"><label for="fTitle">제목</label><input id="fTitle" type="text" maxlength="120"></div>
+    <div class="field"><label for="fNote">비고</label><textarea id="fNote" maxlength="1000" placeholder="참고할 내용, 진행 상황 등을 적어 두세요"></textarea></div>
+    <div class="row2">
+      <div class="field"><label for="fArea">영역</label><select id="fArea"></select></div>
+      <div class="field"><label for="fPri">우선순위</label><select id="fPri"></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="fOwner">담당자</label><input id="fOwner" type="text" maxlength="30"></div>
+      <div class="field"><label for="fDue">기한</label><input id="fDue" type="date"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="fRep">반복</label>
+        <select id="fRep"><option value="">없음</option><option value="daily">매일</option><option value="weekly">매주</option><option value="monthly">매월</option></select>
+      </div>
+      <div class="field" id="repDayWrap" hidden><label for="fRepDay" id="repDayLbl">요일</label><select id="fRepDay"></select></div>
+    </div>
+    <p class="help" id="repHelp" hidden>완료하면 다음 기한이 자동으로 잡히고, 그 날짜가 되면 다시 '할 일'로 돌아옵니다.</p>
+    <div class="field"><label for="fStatus">상태</label>
+      <select id="fStatus"><option value="todo">할 일</option><option value="doing">진행 중</option><option value="done">완료</option></select>
+    </div>
+    <div class="btns">
+      <button type="button" class="btn danger" id="delBtn">삭제</button>
+      <span class="sp"></span>
+      <button type="button" class="btn" id="cancelBtn">취소</button>
+      <button type="submit" class="btn primary">저장</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="syncDlg">
+  <form class="sheet" id="syncForm" autocomplete="off">
+    <h3>여러 기기에서 같이 쓰기</h3>
+    <p class="help">GitHub 저장소에 데이터 파일 하나를 두고, 폰과 PC가 그 파일을 같이 읽고 씁니다. 처음 한 번만 각 기기에서 설정하세요.</p>
+    <div class="row2">
+      <div class="field"><label for="sOwner">저장소 소유자</label><input id="sOwner" type="text" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+      <div class="field"><label for="sRepo">저장소 이름</label><input id="sRepo" type="text" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="sBranch">브랜치</label><input id="sBranch" type="text" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+      <div class="field"><label for="sPath">데이터 파일 이름</label><input id="sPath" type="text" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+    </div>
+    <div class="field"><label for="sToken">토큰 (쓰기용)</label><input id="sToken" type="password" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="github_pat_..."></div>
+    <p class="help"><b>토큰 만들기:</b> GitHub → Settings → Developer settings → Fine-grained tokens. 이 저장소 하나만 고르고 Contents를 <b>Read and write</b>로 설정합니다. 토큰은 이 기기 브라우저에만 저장됩니다. 비워 두면 읽기만 됩니다.</p>
+    <p class="help"><b>주의:</b> 환자 이름 등 개인정보는 적지 마세요. 공개 저장소면 데이터 파일도 공개됩니다. 비공개 저장소를 따로 만들어 데이터 파일만 두는 쪽을 권합니다.</p>
+    <p class="msg" id="syncMsg" role="status"></p>
+    <div class="btns">
+      <button type="button" class="btn danger" id="unlinkBtn">연결 끊기</button>
+      <span class="sp"></span>
+      <button type="button" class="btn" id="syncClose">닫기</button>
+      <button type="submit" class="btn primary">저장하고 동기화</button>
+    </div>
+    <hr>
+    <div class="btns">
+      <button type="button" class="btn" id="exportBtn">백업 내려받기</button>
+      <button type="button" class="btn" id="importBtn">백업 불러오기</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "jrd-board-v1", SKEY = "jrd-board-sync-v1";
+
+  var AREAS = [
+    { id: "app", name: "환자용 앱" },
+    { id: "clinic", name: "진료·환자 관리" },
+    { id: "ops", name: "원내 운영·행정" },
+    { id: "env", name: "원내 환경 정비" }
+  ];
+  var PRIS = [
+    { id: "first", name: "먼저", cls: "first", hint: "다른 기능이 이 작업에 기대고 있습니다." },
+    { id: "quick", name: "바로 끝낼 일", cls: "quick", hint: "짧게 끝낼 수 있는 일입니다." },
+    { id: "next", name: "다음", cls: "next", hint: "초진방과 코드가 정리된 뒤에 이어집니다." },
+    { id: "par", name: "병행", cls: "par", hint: "환자앱 작업과 따로 굴러가는 트랙입니다." },
+    { id: "rec", name: "반복 업무", cls: "rec", hint: "주기마다 돌아오는 일입니다. 항목을 눌러 '반복'을 설정하면 완료 후 다음 기한이 자동으로 잡힙니다." }
+  ];
+  var SEED = [
+    ["app-code", "app", "first", "초진방 등록 시 이용 코드 자동 부여", "성장달력, 챗봇, 성장책 온라인 코드가 모두 이 기능에 의존합니다."],
+    ["app-qr", "app", "quick", "QR코드 생성", ""],
+    ["app-edit", "app", "quick", "자라다케어 앱 일부 내용 수정", ""],
+    ["app-calbot", "app", "next", "성장달력·챗봇 이용 연결", "초진방 등록 후 자동 부여된 코드로 사용"],
+    ["app-book", "app", "next", "성장책 온라인 코드 부여, 이메일 주소로 공유", ""],
+    ["app-route", "app", "next", "현재 동선 표시와 결과 확인 예상 시점 안내", ""],
+    ["app-timer", "app", "next", "채혈 시간 타이머 환자 앱 연동", ""],
+    ["app-after", "app", "next", "재진 환자 앱에 '진료 후 관리 모드' 추가", ""],
+    ["cl-room", "clinic", "first", "초진방 관리·초대 기능", "코드 자동 부여와 함께 확정"],
+    ["cl-chat", "clinic", "rec", "채팅방을 통한 환자 소통 관리", ""],
+    ["cl-abroad", "clinic", "rec", "해외 환자 관리", ""],
+    ["cl-lastweek", "clinic", "rec", "지난주 환자 분류 작업", ""],
+    ["cl-hira", "clinic", "rec", "심평원 청구", "마감이 있는 정기 업무라 개발 작업과 따로 봅니다."],
+    ["op-stock", "ops", "par", "재고 담당자와 앱 공유, 실시간 재고 관리", ""],
+    ["op-sched", "ops", "par", "직원 스케줄 관리표 운영", ""],
+    ["op-manual", "ops", "par", "직원 매뉴얼 체계화", ""],
+    ["env-desk", "env", "quick", "진료실·데스크 책상 정리", ""]
+  ];
+  var FIELDS = ["id", "area", "pri", "title", "note", "status", "owner", "due", "rep", "repDay", "last", "cyc", "u"];
+  var STATUS = ["todo", "doing", "done"];
+  var STATUS_LABEL = { todo: "할 일", doing: "진행 중", done: "완료" };
+  var PRI = {}; PRIS.forEach(function (p, i) { PRI[p.id] = { p: p, rank: i }; });
+  var AREA = {}; AREAS.forEach(function (a) { AREA[a.id] = a; });
+
+  var data = { tasks: {}, deleted: {} };
+  var groupBy = "area", onlyOpen = false;
+  var S = null, remoteSha = null, busy = false, again = false, timer = null;
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, props, kids) {
+    var n = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      if (k === "class") n.className = props[k];
+      else if (k === "text") n.textContent = props[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), props[k]);
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function pad(x) { return (x < 10 ? "0" : "") + x; }
+  function todayStr() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function newId() { return "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  /* ---------- 반복 업무 ---------- */
+  var DOW = "일월화수목금토";
+  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function parseYmd(s) { var p = s.split("-"); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
+  function addDays(s, n) { var d = parseYmd(s); d.setDate(d.getDate() + n); return ymd(d); }
+  // from 날짜 이후(from 포함)로 가장 가까운 반복 날짜
+  function nextDue(rep, day, from) {
+    if (rep === "daily") return from;
+    var d = parseYmd(from);
+    if (rep === "weekly") {
+      d.setDate(d.getDate() + ((Number(day) - d.getDay() + 7) % 7));
+      return ymd(d);
+    }
+    if (rep === "monthly") {
+      var want = Number(day) || 1;
+      for (var i = 0; i < 14; i++) {
+        var y = d.getFullYear(), m = d.getMonth() + i;
+        var lastDay = new Date(y, m + 1, 0).getDate();
+        var c = ymd(new Date(y, m, Math.min(want, lastDay)));
+        if (c >= from) return c;
+      }
+    }
+    return from;
+  }
+  function repLabel(t) {
+    if (t.rep === "daily") return "매일";
+    if (t.rep === "weekly") return "매주 " + DOW.charAt(Number(t.repDay) || 0);
+    if (t.rep === "monthly") return "매월 " + (Number(t.repDay) || 1) + "일";
+    return "";
+  }
+  // 상태를 바꾼다. 반복 업무를 완료하면 다음 기한을 잡고, 완료를 취소하면 이전 기한으로 되돌린다.
+  function applyStatus(t, ns) {
+    var old = t.status || "todo";
+    if (old === ns) return;
+    t.status = ns; t.u = Date.now();
+    if (!t.rep) return;
+    if (ns === "done") {
+      var base = t.due && t.due > todayStr() ? t.due : todayStr();
+      t.cyc = t.due || ""; t.last = todayStr();
+      t.due = nextDue(t.rep, t.repDay, addDays(base, 1));
+    } else if (old === "done") {
+      if (t.cyc) t.due = t.cyc;
+      t.cyc = "";
+    }
+  }
+  // 다음 주기가 시작된 완료 항목은 '할 일'로 되돌린다.
+  function applyRollover() {
+    var ch = false, today = todayStr();
+    Object.keys(data.tasks).forEach(function (id) {
+      var t = data.tasks[id];
+      if (t.rep && t.status === "done" && t.due && today >= t.due) { t.status = "todo"; t.cyc = ""; t.u = Date.now(); ch = true; }
+    });
+    return ch;
+  }
+
+  /* ---------- 저장(이 기기) ---------- */
+  function seedData() {
+    var d = { tasks: {}, deleted: {} };
+    SEED.forEach(function (r) {
+      d.tasks[r[0]] = { id: r[0], area: r[1], pri: r[2], title: r[3], note: r[4], status: "todo", owner: "", due: "", u: 0 };
+    });
+    return d;
+  }
+  function loadLocal() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var j = JSON.parse(raw);
+        if (j && j.tasks) return { tasks: j.tasks, deleted: j.deleted || {} };
+      }
+    } catch (e) {}
+    return seedData();
+  }
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} }
+  function loadSync() {
+    try { var j = JSON.parse(localStorage.getItem(SKEY)); if (j && j.owner && j.repo) return j; } catch (e) {}
+    return null;
+  }
+
+  /* ---------- 병합: 같은 항목은 더 늦게 고친 쪽, 삭제 기록이 더 늦으면 삭제 ---------- */
+  function merge(a, b) {
+    var out = { tasks: {}, deleted: {} };
+    [a.deleted, b.deleted].forEach(function (m) {
+      Object.keys(m || {}).forEach(function (id) { out.deleted[id] = Math.max(out.deleted[id] || 0, m[id]); });
+    });
+    var ids = {};
+    Object.keys(a.tasks).concat(Object.keys(b.tasks)).forEach(function (id) { ids[id] = 1; });
+    Object.keys(ids).forEach(function (id) {
+      var x = a.tasks[id], y = b.tasks[id], pick = !x ? y : !y ? x : ((y.u || 0) > (x.u || 0) ? y : x);
+      if (out.deleted[id] && out.deleted[id] > (pick.u || 0)) return;
+      out.tasks[id] = pick;
+    });
+    return out;
+  }
+  function toFile(d) {
+    var arr = Object.keys(d.tasks).sort().map(function (id) {
+      var t = d.tasks[id], o = {}; FIELDS.forEach(function (f) { o[f] = t[f] === undefined ? "" : t[f]; }); return o;
+    });
+    var del = {}; Object.keys(d.deleted).sort().forEach(function (id) { del[id] = d.deleted[id]; });
+    return { v: 1, tasks: arr, deleted: del };
+  }
+  function fromFile(j) {
+    var d = { tasks: {}, deleted: (j && j.deleted) || {} };
+    ((j && j.tasks) || []).forEach(function (t) { if (t && t.id) d.tasks[t.id] = t; });
+    return d;
+  }
+  function canon(d) { return JSON.stringify(toFile(d)); }
+
+  /* ---------- GitHub 동기화 ---------- */
+  function b64dec(s) {
+    var bin = atob(s.replace(/\s/g, "")), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function b64enc(str) {
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function api(method, body) {
+    var url = "https://api.github.com/repos/" + encodeURIComponent(S.owner) + "/" + encodeURIComponent(S.repo) +
+      "/contents/" + S.path.split("/").map(encodeURIComponent).join("/");
+    if (method === "GET") url += "?ref=" + encodeURIComponent(S.branch) + "&_=" + Date.now();
+    var headers = { "Accept": "application/vnd.github+json" };
+    if (S.token) headers["Authorization"] = "Bearer " + S.token;
+    if (body) headers["Content-Type"] = "application/json";
+    return fetch(url, { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: "no-store" });
+  }
+  function setStatus(kind, text) {
+    var pill = $("syncPill");
+    pill.setAttribute("data-k", kind);
+    $("syncText").textContent = text;
+  }
+  function hhmm() { var d = new Date(); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+
+  async function syncNow() {
+    if (!S) return;
+    if (busy) { again = true; return; }
+    busy = true;
+    setStatus("busy", "동기화 중…");
+    try {
+      for (var attempt = 0; attempt < 3; attempt++) {
+        var res = await api("GET"), remote = null, needPush;
+        if (res.status === 404) { remoteSha = null; needPush = true; }
+        else if (res.status === 401 || res.status === 403) { setStatus("error", "토큰 또는 권한 확인 필요"); return; }
+        else if (!res.ok) { setStatus("error", "동기화 실패 (" + res.status + ")"); return; }
+        else {
+          var j = await res.json();
+          remoteSha = j.sha;
+          remote = fromFile(JSON.parse(b64dec(j.content || "")));
+          var before = canon(data);
+          data = merge(data, remote);
+          applyRollover();
+          if (canon(data) !== before) { persist(); render(); }
+          needPush = canon(data) !== canon(remote);
+        }
+        if (!needPush) { setStatus("ok", S.token ? "동기화됨 " + hhmm() : "읽기 전용 · " + hhmm()); return; }
+        if (!S.token) { setStatus("off", "이 기기에만 저장 (토큰 없음)"); return; }
+        var body = { message: "할 일 보드 업데이트", content: b64enc(JSON.stringify(toFile(data), null, 1) + "\n"), branch: S.branch };
+        if (remoteSha) body.sha = remoteSha;
+        var put = await api("PUT", body);
+        if (put.ok) { var pj = await put.json(); remoteSha = pj.content && pj.content.sha; setStatus("ok", "동기화됨 " + hhmm()); return; }
+        if (put.status === 409 || put.status === 422) continue;
+        if (put.status === 401 || put.status === 403 || put.status === 404) { setStatus("error", "저장 권한 없음 · 토큰 확인"); return; }
+        setStatus("error", "저장 실패 (" + put.status + ")");
+        return;
+      }
+      setStatus("error", "다른 기기와 충돌 · 잠시 뒤 다시 시도");
+    } catch (e) {
+      setStatus("error", "연결할 수 없음 · 이 기기에는 저장됨");
+    } finally {
+      busy = false;
+      if (again) { again = false; schedulePush(); }
+    }
+  }
+  function schedulePush() {
+    if (!S) return;
+    clearTimeout(timer);
+    setStatus("busy", "저장 대기…");
+    timer = setTimeout(function () { timer = null; syncNow(); }, 1400);
+  }
+
+  /* ---------- 데이터 변경 ---------- */
+  function changed() { persist(); render(); schedulePush(); }
+  function setStatusOf(id, s) { var t = data.tasks[id]; if (!t) return; applyStatus(t, s); changed(); }
+
+  /* ---------- 화면 ---------- */
+  function fmtDue(s) { var p = s.split("-"); return p.length === 3 ? Number(p[1]) + "/" + Number(p[2]) : s; }
+
+  function row(t, mode) {
+    var s = t.status || "todo", pri = (PRI[t.pri] || PRI.next).p;
+    var btn = el("button", {
+      type: "button", class: "st", "data-s": s,
+      "aria-label": t.title + " 상태: " + STATUS_LABEL[s] + ". 누르면 다음 단계로 바뀝니다.",
+      onclick: function () { setStatusOf(t.id, STATUS[(STATUS.indexOf(s) + 1) % 3]); }
+    }, [el("span")]);
+    btn.firstChild.innerHTML = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7"/></svg>';
+    var late = t.due && t.due < todayStr() && s !== "done";
+    var meta = el("span", { class: "meta" }, [
+      el("span", { class: "tag " + pri.cls, text: pri.name }),
+      mode === "pri" ? el("span", { class: "tag plain", text: (AREA[t.area] || {}).name || "" }) : null,
+      t.rep ? el("span", { class: "tag plain", text: "↻ " + repLabel(t) }) : null,
+      t.owner ? el("span", { class: "tag plain", text: t.owner }) : null,
+      t.due ? el("span", { class: "tag plain" + (late ? " late" : ""), text: (t.rep && s === "done" ? "다음 " : "기한 ") + fmtDue(t.due) }) : null,
+      t.rep && t.last ? el("span", { class: "tag plain", text: "최근 완료 " + fmtDue(t.last) }) : null
+    ]);
+    // 영역별 보기에서는 영역이 제목에 이미 나오므로 우선순위 태그만, 우선순위별 보기에서는 우선순위 태그를 숨긴다
+    if (mode === "pri") meta.removeChild(meta.firstChild);
+    var open = el("button", { type: "button", class: "open", onclick: function () { openEdit(t.id); } }, [
+      el("span", { class: "title", text: t.title }),
+      t.note ? el("span", { class: "note", text: t.note }) : null,
+      meta
+    ]);
+    return el("li", { "data-s": s }, [btn, open]);
+  }
+
+  function render() {
+    var board = $("board");
+    board.textContent = "";
+    var all = Object.keys(data.tasks).map(function (id) { return data.tasks[id]; });
+    var list = all.filter(function (t) { return !onlyOpen || t.status !== "done"; });
+    function byRank(x, y) { return (PRI[x.pri] ? PRI[x.pri].rank : 9) - (PRI[y.pri] ? PRI[y.pri].rank : 9); }
+    var groups = groupBy === "area"
+      ? AREAS.map(function (a) { return { name: a.name, hint: "", items: list.filter(function (t) { return t.area === a.id; }).sort(byRank) }; })
+      : PRIS.map(function (p) { return { name: p.name, hint: p.hint, items: list.filter(function (t) { return t.pri === p.id; }) }; });
+    groups.forEach(function (g) {
+      if (!g.items.length) return;
+      board.appendChild(el("section", null, [
+        el("h2", null, [document.createTextNode(g.name), el("span", { text: g.items.length + "건" })]),
+        g.hint ? el("p", { class: "hint", text: g.hint }) : null,
+        el("ul", null, g.items.map(function (t) { return row(t, groupBy); }))
+      ]));
+    });
+    if (!board.firstChild) board.appendChild(el("div", { class: "empty", text: all.length ? "남은 일이 없습니다." : "할 일이 없습니다. 오른쪽 아래 + 버튼으로 추가하세요." }));
+
+    var n = all.length, done = 0, doing = 0;
+    all.forEach(function (t) { if (t.status === "done") done++; else if (t.status === "doing") doing++; });
+    $("barD").style.width = (n ? done / n * 100 : 0) + "%";
+    $("barP").style.width = (n ? doing / n * 100 : 0) + "%";
+    $("counts").innerHTML = "<span>완료 <b>" + done + "</b> / " + n + "</span><span>진행 중 <b>" + doing + "</b></span><span>할 일 <b>" + (n - done - doing) + "</b></span>";
+  }
+
+  /* ---------- 편집 시트 ---------- */
+  var editId = null, delArmed = false;
+  AREAS.forEach(function (a) { $("fArea").appendChild(el("option", { value: a.id, text: a.name })); });
+  PRIS.forEach(function (p) { $("fPri").appendChild(el("option", { value: p.id, text: p.name })); });
+
+  function openEdit(id) {
+    editId = id; delArmed = false;
+    var t = id ? data.tasks[id] : { title: "", note: "", area: AREAS[0].id, pri: "next", owner: "", due: "", status: "todo" };
+    if (!t) return;
+    $("editHead").textContent = id ? "할 일 편집" : "할 일 추가";
+    $("fTitle").value = t.title; $("fTitle").classList.remove("bad");
+    $("fNote").value = t.note || "";
+    $("fArea").value = t.area; $("fPri").value = t.pri;
+    $("fOwner").value = t.owner || ""; $("fDue").value = t.due || ""; $("fStatus").value = t.status || "todo";
+    $("fRep").value = t.rep || ""; fillRepDay(t.rep || "", t.repDay);
+    var del = $("delBtn"); del.hidden = !id; del.textContent = "삭제"; del.classList.remove("armed");
+    $("editDlg").showModal();
+    if (!id) $("fTitle").focus();
+  }
+  function fillRepDay(rep, val) {
+    var sel = $("fRepDay"), i;
+    sel.textContent = "";
+    $("repDayWrap").hidden = !(rep === "weekly" || rep === "monthly");
+    $("repHelp").hidden = !rep;
+    if (rep === "weekly") {
+      $("repDayLbl").textContent = "요일";
+      for (i = 0; i < 7; i++) sel.appendChild(el("option", { value: String(i), text: DOW.charAt(i) + "요일" }));
+      sel.value = String(val === "" || val == null ? 1 : val);
+    } else if (rep === "monthly") {
+      $("repDayLbl").textContent = "날짜";
+      for (i = 1; i <= 31; i++) sel.appendChild(el("option", { value: String(i), text: i + "일" }));
+      sel.value = String(val === "" || val == null ? 1 : val);
+    }
+  }
+  $("fRep").addEventListener("change", function () { fillRepDay(this.value, ""); });
+  $("addBtn").addEventListener("click", function () { openEdit(null); });
+  $("addTop").addEventListener("click", function () { openEdit(null); });
+  $("cancelBtn").addEventListener("click", function () { $("editDlg").close(); });
+  $("editForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var title = $("fTitle").value.trim();
+    if (!title) { $("fTitle").classList.add("bad"); $("fTitle").focus(); return; }
+    var rep = $("fRep").value;
+    var t = editId ? data.tasks[editId] : { id: newId(), status: "todo" };
+    Object.assign(t, { title: title, note: $("fNote").value.trim(), area: $("fArea").value, pri: $("fPri").value,
+      owner: $("fOwner").value.trim(), due: $("fDue").value, rep: rep,
+      repDay: rep === "weekly" || rep === "monthly" ? Number($("fRepDay").value) : "", u: Date.now() });
+    if (rep && !t.due) t.due = nextDue(rep, t.repDay, todayStr());
+    if (!rep) { t.cyc = ""; t.last = ""; }
+    applyStatus(t, $("fStatus").value);
+    if (!editId) data.tasks[t.id] = t;
+    $("editDlg").close();
+    changed();
+  });
+  $("delBtn").addEventListener("click", function () {
+    var b = $("delBtn");
+    if (!delArmed) { delArmed = true; b.textContent = "한 번 더 누르면 삭제"; b.classList.add("armed"); return; }
+    delete data.tasks[editId]; data.deleted[editId] = Date.now();
+    $("editDlg").close();
+    changed();
+  });
+
+  /* ---------- 동기화 설정 시트 ---------- */
+  function openSync() {
+    var c = S || { owner: "ha5857-web", repo: "", branch: "main", path: "todo-board-data.json", token: "" };
+    $("sOwner").value = c.owner; $("sRepo").value = c.repo; $("sBranch").value = c.branch || "main";
+    $("sPath").value = c.path || "todo-board-data.json"; $("sToken").value = c.token || "";
+    $("syncMsg").textContent = ""; $("syncMsg").className = "msg";
+    $("unlinkBtn").hidden = !S;
+    $("syncDlg").showModal();
+  }
+  $("syncPill").addEventListener("click", openSync);
+  $("syncClose").addEventListener("click", function () { $("syncDlg").close(); });
+  $("syncForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var c = { owner: $("sOwner").value.trim(), repo: $("sRepo").value.trim(), branch: $("sBranch").value.trim() || "main",
+      path: $("sPath").value.trim().replace(/^\/+/, "") || "todo-board-data.json", token: $("sToken").value.trim() };
+    if (!c.owner || !c.repo) { $("syncMsg").className = "msg err"; $("syncMsg").textContent = "저장소 소유자와 이름을 입력하세요."; return; }
+    S = c; remoteSha = null;
+    try { localStorage.setItem(SKEY, JSON.stringify(c)); } catch (err) {}
+    $("syncDlg").close();
+    syncNow();
+  });
+  $("unlinkBtn").addEventListener("click", function () {
+    S = null; remoteSha = null; clearTimeout(timer);
+    try { localStorage.removeItem(SKEY); } catch (err) {}
+    setStatus("off", "이 기기에만 저장");
+    $("syncDlg").close();
+  });
+  $("exportBtn").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(toFile(data), null, 1)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "할일보드-백업-" + todayStr() + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  });
+  $("importBtn").addEventListener("click", function () { $("importFile").click(); });
+  $("importFile").addEventListener("change", function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        data = merge(data, fromFile(JSON.parse(r.result)));
+        changed();
+        $("syncMsg").className = "msg"; $("syncMsg").textContent = "백업을 불러와 합쳤습니다.";
+      } catch (err) { $("syncMsg").className = "msg err"; $("syncMsg").textContent = "백업 파일을 읽을 수 없습니다."; }
+    };
+    r.readAsText(f);
+    this.value = "";
+  });
+  ["editDlg", "syncDlg"].forEach(function (id) {
+    $(id).addEventListener("click", function (e) { if (e.target === this) this.close(); });
+  });
+
+  /* ---------- 보기 전환 ---------- */
+  function setPressed(a, b, firstOn) { $(a).setAttribute("aria-pressed", firstOn ? "true" : "false"); $(b).setAttribute("aria-pressed", firstOn ? "false" : "true"); }
+  $("gArea").addEventListener("click", function () { groupBy = "area"; setPressed("gArea", "gPri", true); render(); });
+  $("gPri").addEventListener("click", function () { groupBy = "pri"; setPressed("gArea", "gPri", false); render(); });
+  $("fAll").addEventListener("click", function () { onlyOpen = false; setPressed("fAll", "fOpen", true); render(); });
+  $("fOpen").addEventListener("click", function () { onlyOpen = true; setPressed("fAll", "fOpen", false); render(); });
+
+  /* ---------- 시작 ---------- */
+  var d0 = new Date();
+  $("today").textContent = "삼성자라다 소아청소년과 · " + d0.getFullYear() + "." + (d0.getMonth() + 1) + "." + d0.getDate();
+  data = loadLocal();
+  if (applyRollover()) persist();
+  S = loadSync();
+  render();
+  if (S) syncNow();
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState !== "visible") return;
+    if (applyRollover()) { persist(); render(); schedulePush(); }
+    else if (S && !busy && !timer) syncNow();
+  });
+})();
+</script>
+</body>
+</html>
