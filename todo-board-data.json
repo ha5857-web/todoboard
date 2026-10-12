@@ -1,0 +1,193 @@
+{
+ "v": 1,
+ "tasks": [
+  {
+   "id": "app-after",
+   "area": "app",
+   "pri": "next",
+   "title": "재진 환자 앱에 '진료 후 관리 모드' 추가",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-book",
+   "area": "app",
+   "pri": "next",
+   "title": "성장책 온라인 코드 부여, 이메일 주소로 공유",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-calbot",
+   "area": "app",
+   "pri": "next",
+   "title": "성장달력·챗봇 이용 연결",
+   "note": "초진방 등록 후 자동 부여된 코드로 사용",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-code",
+   "area": "app",
+   "pri": "first",
+   "title": "초진방 등록 시 이용 코드 자동 부여",
+   "note": "성장달력, 챗봇, 성장책 온라인 코드가 모두 이 기능에 의존합니다.",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-edit",
+   "area": "app",
+   "pri": "quick",
+   "title": "자라다케어 앱 일부 내용 수정",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-qr",
+   "area": "app",
+   "pri": "quick",
+   "title": "QR코드 생성",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-route",
+   "area": "app",
+   "pri": "next",
+   "title": "현재 동선 표시와 결과 확인 예상 시점 안내",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "app-timer",
+   "area": "app",
+   "pri": "next",
+   "title": "채혈 시간 타이머 환자 앱 연동",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "cl-abroad",
+   "area": "clinic",
+   "pri": "rec",
+   "title": "해외 환자 관리",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "cl-chat",
+   "area": "clinic",
+   "pri": "rec",
+   "title": "채팅방을 통한 환자 소통 관리",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "cl-hira",
+   "area": "clinic",
+   "pri": "rec",
+   "title": "심평원 청구",
+   "note": "마감이 있는 정기 업무라 개발 작업과 따로 봅니다.",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "cl-lastweek",
+   "area": "clinic",
+   "pri": "rec",
+   "title": "지난주 환자 분류 작업",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "cl-room",
+   "area": "clinic",
+   "pri": "first",
+   "title": "초진방 관리·초대 기능",
+   "note": "코드 자동 부여와 함께 확정",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "env-desk",
+   "area": "env",
+   "pri": "quick",
+   "title": "진료실·데스크 책상 정리",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "op-manual",
+   "area": "ops",
+   "pri": "par",
+   "title": "직원 매뉴얼 체계화",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "op-sched",
+   "area": "ops",
+   "pri": "par",
+   "title": "직원 스케줄 관리표 운영",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  },
+  {
+   "id": "op-stock",
+   "area": "ops",
+   "pri": "par",
+   "title": "재고 담당자와 앱 공유, 실시간 재고 관리",
+   "note": "",
+   "status": "todo",
+   "owner": "",
+   "due": "",
+   "u": 0
+  }
+ ],
+ "deleted": {}
+}
