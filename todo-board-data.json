@@ -10,6 +10,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -21,6 +25,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -32,6 +40,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -43,6 +55,10 @@
    "status": "doing",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 1791772161948
   },
   {
@@ -54,6 +70,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -62,10 +82,14 @@
    "pri": "quick",
    "title": "QR코드 생성",
    "note": "",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
-   "u": 0
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
+   "u": 1791773525693
   },
   {
    "id": "app-route",
@@ -76,6 +100,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -87,6 +115,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -98,6 +130,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -109,6 +145,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -120,6 +160,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -131,6 +175,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -142,6 +190,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -153,6 +205,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 1791772622006
   },
   {
@@ -164,6 +220,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -175,6 +235,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   },
   {
@@ -186,6 +250,10 @@
    "status": "todo",
    "owner": "",
    "due": "",
+   "rep": "",
+   "repDay": "",
+   "last": "",
+   "cyc": "",
    "u": 0
   }
  ],
