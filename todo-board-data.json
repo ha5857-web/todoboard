@@ -32,21 +32,6 @@
    "u": 1791797213653
   },
   {
-   "id": "app-calbot",
-   "area": "app",
-   "pri": "next",
-   "title": "성장달력·챗봇 이용 연결",
-   "note": "초진방 등록 후 자동 부여된 코드로 사용",
-   "status": "done",
-   "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
-   "last": "",
-   "cyc": "",
-   "u": 1791797751171
-  },
-  {
    "id": "app-code",
    "area": "app",
    "pri": "first",
@@ -302,5 +287,7 @@
    "u": 1791778690513
   }
  ],
- "deleted": {}
+ "deleted": {
+  "app-calbot": 1791797753740
+ }
 }
