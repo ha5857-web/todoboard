@@ -212,21 +212,6 @@
    "u": 1791777573152
   },
   {
-   "id": "op-sched",
-   "area": "ops",
-   "pri": "par",
-   "title": "직원 스케줄 관리표 운영",
-   "note": "",
-   "status": "doing",
-   "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
-   "last": "",
-   "cyc": "",
-   "u": 1791797773169
-  },
-  {
    "id": "op-stock",
    "area": "ops",
    "pri": "par",
@@ -288,6 +273,7 @@
   }
  ],
  "deleted": {
-  "app-calbot": 1791797753740
+  "app-calbot": 1791797753740,
+  "op-sched": 1791797775530
  }
 }
