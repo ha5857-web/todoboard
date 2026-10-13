@@ -159,12 +159,12 @@
    "note": "",
    "status": "done",
    "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
+   "due": "2026-10-19",
+   "rep": "weekly",
+   "repDay": 1,
    "last": "",
    "cyc": "",
-   "u": 1791857118232
+   "u": 1791857128922
   },
   {
    "id": "cl-room",
