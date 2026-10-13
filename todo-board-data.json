@@ -157,14 +157,14 @@
    "pri": "rec",
    "title": "지난주 환자 분류 작업",
    "note": "",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
    "rep": "",
    "repDay": "",
    "last": "",
    "cyc": "",
-   "u": 0
+   "u": 1791857118232
   },
   {
    "id": "cl-room",
