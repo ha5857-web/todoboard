@@ -142,14 +142,14 @@
    "pri": "rec",
    "title": "심평원 청구",
    "note": "마감이 있는 정기 업무라 개발 작업과 따로 봅니다.",
-   "status": "done",
+   "status": "todo",
    "owner": "",
    "due": "2026-10-19",
    "rep": "weekly",
    "repDay": 1,
    "last": "2026-10-12",
-   "cyc": "2026-10-12",
-   "u": 1791780542587
+   "cyc": "",
+   "u": 1792371006026
   },
   {
    "id": "cl-lastweek",
@@ -157,14 +157,14 @@
    "pri": "rec",
    "title": "지난주 환자 분류 작업",
    "note": "",
-   "status": "done",
+   "status": "todo",
    "owner": "",
    "due": "2026-10-19",
    "rep": "weekly",
    "repDay": 1,
    "last": "",
    "cyc": "",
-   "u": 1791857128922
+   "u": 1792371006026
   },
   {
    "id": "cl-room",
