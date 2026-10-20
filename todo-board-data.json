@@ -311,7 +311,7 @@
    "pri": "next",
    "title": "자라다 케어 수정",
    "note": "전문의가 만들었다. 커맨트",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
    "rep": "",
@@ -319,7 +319,7 @@
    "last": "",
    "cyc": "",
    "alarm": "",
-   "u": 1792476556751
+   "u": 1792480934567
   },
   {
    "id": "tmvgaid8cxsnc",
@@ -327,7 +327,7 @@
    "pri": "next",
    "title": "킹콩프린트",
    "note": "연락",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
    "rep": "",
@@ -335,7 +335,7 @@
    "last": "",
    "cyc": "",
    "alarm": "",
-   "u": 1792476974460
+   "u": 1792480936579
   }
  ],
  "deleted": {
