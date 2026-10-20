@@ -119,7 +119,7 @@
    "pri": "rec",
    "title": "해외 환자 관리",
    "note": "",
-   "status": "todo",
+   "status": "done",
    "owner": "",
    "due": "",
    "rep": "",
@@ -127,7 +127,7 @@
    "last": "",
    "cyc": "",
    "alarm": "",
-   "u": 0
+   "u": 1792476575257
   },
   {
    "id": "cl-chat",
@@ -151,15 +151,15 @@
    "pri": "rec",
    "title": "심평원 청구",
    "note": "마감이 있는 정기 업무라 개발 작업과 따로 봅니다.",
-   "status": "todo",
+   "status": "done",
    "owner": "",
-   "due": "2026-10-19",
+   "due": "2026-10-26",
    "rep": "weekly",
    "repDay": 1,
-   "last": "2026-10-12",
-   "cyc": "",
+   "last": "2026-10-20",
+   "cyc": "2026-10-19",
    "alarm": "",
-   "u": 1792371006026
+   "u": 1792476577411
   },
   {
    "id": "cl-lastweek",
@@ -167,15 +167,15 @@
    "pri": "rec",
    "title": "지난주 환자 분류 작업",
    "note": "",
-   "status": "todo",
+   "status": "done",
    "owner": "",
-   "due": "2026-10-19",
+   "due": "2026-10-26",
    "rep": "weekly",
    "repDay": 1,
-   "last": "",
-   "cyc": "",
+   "last": "2026-10-20",
+   "cyc": "2026-10-19",
    "alarm": "",
-   "u": 1792371006026
+   "u": 1792476576457
   },
   {
    "id": "cl-room",
