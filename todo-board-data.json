@@ -62,26 +62,6 @@
    "u": 1791773862759
   },
   {
-   "id": "app-qr",
-   "area": "app",
-   "pri": "quick",
-   "title": "QR코드 생성",
-   "note": "",
-   "status": "done",
-   "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
-   "last": "",
-   "cyc": "",
-   "alarm": "",
-   "q": "",
-   "ord": "",
-   "start": "",
-   "cycS": "",
-   "u": 1791773525693
-  },
-  {
    "id": "app-route",
    "area": "app",
    "pri": "next",
@@ -405,6 +385,7 @@
  "deleted": {
   "app-calbot": 1791797753740,
   "app-code": 1792552218935,
+  "app-qr": 1792552222124,
   "op-sched": 1791797775530
  }
 }
