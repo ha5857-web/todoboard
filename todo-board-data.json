@@ -42,26 +42,6 @@
    "u": 1791797213653
   },
   {
-   "id": "app-edit",
-   "area": "app",
-   "pri": "quick",
-   "title": "자라다케어 앱 일부 내용 수정",
-   "note": "",
-   "status": "done",
-   "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
-   "last": "",
-   "cyc": "",
-   "alarm": "",
-   "q": "",
-   "ord": "",
-   "start": "",
-   "cycS": "",
-   "u": 1791773862759
-  },
-  {
    "id": "app-route",
    "area": "app",
    "pri": "next",
@@ -385,6 +365,7 @@
  "deleted": {
   "app-calbot": 1791797753740,
   "app-code": 1792552218935,
+  "app-edit": 1792552228549,
   "app-qr": 1792552222124,
   "op-sched": 1791797775530
  }
