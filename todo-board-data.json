@@ -42,26 +42,6 @@
    "u": 1791797213653
   },
   {
-   "id": "app-code",
-   "area": "app",
-   "pri": "first",
-   "title": "초진방 등록 시 이용 코드 자동 부여",
-   "note": "성장달력, 챗봇 모두 이 기능에 의존합니다.\n이건 성공함.",
-   "status": "done",
-   "owner": "",
-   "due": "",
-   "rep": "",
-   "repDay": "",
-   "last": "",
-   "cyc": "",
-   "alarm": "",
-   "q": "",
-   "ord": "",
-   "start": "",
-   "cycS": "",
-   "u": 1792552216100
-  },
-  {
    "id": "app-edit",
    "area": "app",
    "pri": "quick",
@@ -424,6 +404,7 @@
  ],
  "deleted": {
   "app-calbot": 1791797753740,
+  "app-code": 1792552218935,
   "op-sched": 1791797775530
  }
 }
